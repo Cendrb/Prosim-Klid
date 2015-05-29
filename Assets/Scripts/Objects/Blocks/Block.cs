@@ -14,10 +14,15 @@ namespace Klid.Blocks
     {
         private static readonly string NAME_KEY = "name";
         private static readonly string DESCRIPTION_KEY = "description";
+        private static readonly string ID_KEY = "id";
         private static readonly string SHARD_SLOTS_KEY = "shard_slots";
+
+        private static readonly string NEXT_ID_KEY = "next_id";
+        private static int nextId;
 
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public int Id { get; private set; }
 
         public List<ShardSlot> ShardSlots { get; private set; }
 
@@ -25,10 +30,26 @@ namespace Klid.Blocks
 
         public BlockGameInterface GameInterface { get; private set; }
 
+        static Block()
+        {
+            nextId = PlayerPrefs.GetInt(NEXT_ID_KEY);
+        }
+
+        
+        public int GetNextAvailableId()
+        {
+            int returnable = nextId;
+            nextId++;
+            PlayerPrefs.SetInt(NEXT_ID_KEY, nextId);
+            PlayerPrefs.Save();
+            return returnable;
+        }
+
         public Block(string name, string description)
         {
             Name = name;
             Description = description;
+            Id = GetNextAvailableId();
             Sprite = Resources.Load<Sprite>("Graphics/Blocks/" + Name);
 
             ShardSlots = getShardSlots();
@@ -41,6 +62,7 @@ namespace Klid.Blocks
         {
             Name = info.GetString(NAME_KEY);
             Description = info.GetString(DESCRIPTION_KEY);
+            Id = info.GetInt32(ID_KEY);
             ShardSlots = (List<ShardSlot>)info.GetValue(SHARD_SLOTS_KEY, typeof(List<ShardSlot>));
             bindEventListeners();
 
@@ -73,6 +95,7 @@ namespace Klid.Blocks
             info.AddValue(NAME_KEY, Name);
             info.AddValue(DESCRIPTION_KEY, Description);
             info.AddValue(SHARD_SLOTS_KEY, ShardSlots);
+            info.AddValue(ID_KEY, Id);
         }
     }
 }

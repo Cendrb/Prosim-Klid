@@ -15,9 +15,19 @@ namespace Klid
 
         string path;
 
+        private static readonly string nextIdKey = "NEXT_ID";
+        private int nextId;
+
         public CraftedBlocksStorage(string path)
         {
             this.path = path;
+        }
+
+        public Block FindById(int id)
+        {
+            return (from block in CraftedBlocks
+                   where block.Id == id
+                   select block).First();
         }
 
         public void Load()
