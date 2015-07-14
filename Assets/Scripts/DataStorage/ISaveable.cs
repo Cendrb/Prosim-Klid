@@ -7,7 +7,7 @@ namespace Klid
 {
     interface ISaveable
     {
-        public void Load();
-        public void Save();
+        void Load();
+        void Save();
     }
 }

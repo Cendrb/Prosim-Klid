@@ -17,14 +17,16 @@ namespace Klid
         public string AllowedShardsDescription { get; private set; }
         public Shard Shard { get; private set; }
 
-        public event Action<Shard> ShardSet = delegate { };
+        public event Func<Shard, Boolean> ShardSet = delegate { return false; };
 
         private List<Type> allowedShardTypes;
 
-        public ShardSlot(string alowedShardsDescription)
+        public ShardSlot(string alowedShardsDescription, params Type[] types)
         {
             allowedShardTypes = new List<Type>();
             AllowedShardsDescription = alowedShardsDescription;
+            foreach (Type type in types)
+                addShardType(type);
         }
 
         protected ShardSlot(SerializationInfo info, StreamingContext context)
@@ -34,7 +36,7 @@ namespace Klid
             allowedShardTypes = (List<Type>)info.GetValue(ALLOWED_SHARDS_KEY, typeof(List<Type>));
         }
 
-        public void AddShardType(Type type)
+        private void addShardType(Type type)
         {
             if (typeof(Shard).IsAssignableFrom(type))
             {
@@ -46,10 +48,9 @@ namespace Klid
 
         public bool SetShard(Shard shard)
         {
-            if (IsAllowed(shard))
+            if (IsAllowed(shard) && ShardSet(shard))
             {
                 Shard = shard;
-                ShardSet(Shard);
                 return true;
             }
             else

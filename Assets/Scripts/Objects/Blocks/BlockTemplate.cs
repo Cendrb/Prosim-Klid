@@ -12,11 +12,13 @@ namespace Klid.Blocks
         public string Description { get; private set; }
         public Sprite Sprite { get; private set; }
         public Type BlockClass { get; private set; }
+        public Tab Tab { get; private set; }
 
-        public BlockTemplate(string name, string description, Type blockClass)
+        public BlockTemplate(string name, string description, Type blockClass, Tab tab)
         {
             Name = name;
             Description = description;
+            Tab = tab;
             Sprite = Resources.Load<Sprite>("Graphics/Blocks/" + Name);
             BlockClass = blockClass;
         }

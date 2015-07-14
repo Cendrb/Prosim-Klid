@@ -15,7 +15,6 @@ namespace Klid
 
         string path;
 
-        private static readonly string nextIdKey = "NEXT_ID";
         private int nextId;
 
         public CraftedBlocksStorage(string path)
@@ -39,6 +38,7 @@ namespace Klid
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 CraftedBlocks = (List<Block>)formatter.Deserialize(stream);
+                nextId = (int)formatter.Deserialize(stream);
                 stream.Close();
             }
             catch (Exception e)
@@ -55,6 +55,7 @@ namespace Klid
             using (FileStream stream = File.Open(path, FileMode.OpenOrCreate))
             {
                 formatter.Serialize(stream, CraftedBlocks);
+                formatter.Serialize(stream, nextId);
             }
         }
 

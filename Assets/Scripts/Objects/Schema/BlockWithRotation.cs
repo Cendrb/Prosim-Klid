@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Klid.Blocks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Klid.Schema
+namespace Klid
 {
     [Serializable]
     class BlockWithRotation : ISerializable
@@ -24,7 +25,7 @@ namespace Klid.Schema
         protected BlockWithRotation(SerializationInfo info, StreamingContext context)
         {
             Block = DataStorage.CraftedBlocks.FindById(info.GetInt32(ID_KEY));
-            Rotation = info.GetInt32(ROTATION_KEY)¨;
+            Rotation = info.GetInt32(ROTATION_KEY);
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
